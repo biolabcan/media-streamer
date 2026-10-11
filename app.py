@@ -1,14 +1,18 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import yt_dlp
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 CORS(app)
 
 DOWNLOAD_FOLDER = os.path.abspath('downloads')
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 @app.route('/api/extract', methods=['POST'])
 def extract_media():
@@ -24,8 +28,6 @@ def extract_media():
             return jsonify({'success': False, 'error': 'Bağlantı adresi boş olamaz.'}), 400
 
         url = url.strip()
-
-        # Eğer klasörde cookies.txt varsa otomatik kullanır, yoksa standart dener
         cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
 
         ydl_opts = {
@@ -62,7 +64,7 @@ def extract_media():
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
             if not info:
-                return jsonify({'success': False, 'error': 'Medya bilgisi çözümlenemedi. Gizli hesap veya hatalı link olabilir.'}), 400
+                return jsonify({'success': False, 'error': 'Medya bilgisi çözümlenemedi.'}), 400
 
             video_id = info.get('id', 'media')
             ext = 'mp3' if quality == 'audio' else info.get('ext', 'mp4')
@@ -77,7 +79,6 @@ def extract_media():
                 size_bytes = os.path.getsize(filepath)
                 file_size_mb = f"{size_bytes / (1024 * 1024):.1f} MB"
 
-            # Dinamik sunucu adresini al (Render veya localhost uyumlu)
             base_url = request.host_url.rstrip('/')
             stream_url = f"{base_url}/api/stream/{filename}"
 
@@ -114,5 +115,4 @@ def stream_file(filename):
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    print(f"🚀 CAN STUDIO Çerez Destekli Kararlı Motor Aktif: http://localhost:{port}")
     app.run(host="0.0.0.0", port=port, debug=False)
