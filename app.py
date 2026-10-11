@@ -36,6 +36,8 @@ def extract_media():
             'no_warnings': True,
             'ignoreerrors': True,
             'socket_timeout': 30,
+            'noplaylist': True,
+            'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
             'http_headers': {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
                 'Accept-Language': 'en-US,en;q=0.9',
@@ -55,14 +57,15 @@ def extract_media():
                 }],
             })
         elif quality == '1080':
-            ydl_opts.update({'format': 'best[height<=1080]/best'})
+            ydl_opts.update({'format': 'bestvideo[height<=1080]+bestaudio/best[height<=1080]/best'})
         elif quality == '720':
-            ydl_opts.update({'format': 'best[height<=720]/best'})
+            ydl_opts.update({'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]/best'})
         else:
             ydl_opts.update({'format': 'best/best'})
         
+        # Tek seferde hem bilgileri alıp hem indirerek süreci maksimum hıza çıkarıyoruz
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
+            info = ydl.extract_info(url, download=True)
             if not info:
                 return jsonify({'success': False, 'error': 'Medya bilgisi çözümlenemedi.'}), 400
 
@@ -71,28 +74,25 @@ def extract_media():
             filename = f"{video_id}.{ext}"
             filepath = os.path.join(DOWNLOAD_FOLDER, filename)
 
-            if not os.path.exists(filepath):
-                ydl.download([url])
+        file_size_mb = "Bilinmiyor"
+        if os.path.exists(filepath):
+            size_bytes = os.path.getsize(filepath)
+            file_size_mb = f"{size_bytes / (1024 * 1024):.1f} MB"
 
-            file_size_mb = "Bilinmiyor"
-            if os.path.exists(filepath):
-                size_bytes = os.path.getsize(filepath)
-                file_size_mb = f"{size_bytes / (1024 * 1024):.1f} MB"
+        base_url = request.host_url.rstrip('/')
+        stream_url = f"{base_url}/api/stream/{filename}"
 
-            base_url = request.host_url.rstrip('/')
-            stream_url = f"{base_url}/api/stream/{filename}"
-
-            return jsonify({
-                'success': True,
-                'title': info.get('title', 'Medya Dosyası'),
-                'duration': info.get('duration_string', 'Medya'),
-                'thumbnail': info.get('thumbnail', ''),
-                'filename': filename,
-                'ext': ext,
-                'uploader': info.get('uploader', 'CAN STUDIO'),
-                'filesize': file_size_mb,
-                'streamUrl': stream_url
-            })
+        return jsonify({
+            'success': True,
+            'title': info.get('title', 'Medya Dosyası'),
+            'duration': info.get('duration_string', 'Medya'),
+            'thumbnail': info.get('thumbnail', ''),
+            'filename': filename,
+            'ext': ext,
+            'uploader': info.get('uploader', 'CAN STUDIO'),
+            'filesize': file_size_mb,
+            'streamUrl': stream_url
+        })
 
     except Exception as e:
         return jsonify({'success': False, 'error': f'İşlem hatası: {str(e)}'}), 500
