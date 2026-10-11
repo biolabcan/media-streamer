@@ -1,0 +1,118 @@
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
+import yt_dlp
+import os
+
+app = Flask(__name__)
+CORS(app)
+
+DOWNLOAD_FOLDER = os.path.abspath('downloads')
+if not os.path.exists(DOWNLOAD_FOLDER):
+    os.makedirs(DOWNLOAD_FOLDER)
+
+@app.route('/api/extract', methods=['POST'])
+def extract_media():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'success': False, 'error': 'Geçersiz veri biçimi.'}), 400
+
+        url = data.get('url')
+        quality = data.get('quality', 'best')
+        
+        if not url:
+            return jsonify({'success': False, 'error': 'Bağlantı adresi boş olamaz.'}), 400
+
+        url = url.strip()
+
+        # Eğer klasörde cookies.txt varsa otomatik kullanır, yoksa standart dener
+        cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
+
+        ydl_opts = {
+            'quiet': True,
+            'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(id)s.%(ext)s'),
+            'no_warnings': True,
+            'ignoreerrors': True,
+            'socket_timeout': 30,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                'Accept-Language': 'en-US,en;q=0.9',
+            }
+        }
+
+        if os.path.exists(cookies_path):
+            ydl_opts['cookiefile'] = cookies_path
+
+        if quality == 'audio':
+            ydl_opts.update({
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }],
+            })
+        elif quality == '1080':
+            ydl_opts.update({'format': 'best[height<=1080]/best'})
+        elif quality == '720':
+            ydl_opts.update({'format': 'best[height<=720]/best'})
+        else:
+            ydl_opts.update({'format': 'best/best'})
+        
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+            if not info:
+                return jsonify({'success': False, 'error': 'Medya bilgisi çözümlenemedi. Gizli hesap veya hatalı link olabilir.'}), 400
+
+            video_id = info.get('id', 'media')
+            ext = 'mp3' if quality == 'audio' else info.get('ext', 'mp4')
+            filename = f"{video_id}.{ext}"
+            filepath = os.path.join(DOWNLOAD_FOLDER, filename)
+
+            if not os.path.exists(filepath):
+                ydl.download([url])
+
+            file_size_mb = "Bilinmiyor"
+            if os.path.exists(filepath):
+                size_bytes = os.path.getsize(filepath)
+                file_size_mb = f"{size_bytes / (1024 * 1024):.1f} MB"
+
+            # Dinamik sunucu adresini al (Render veya localhost uyumlu)
+            base_url = request.host_url.rstrip('/')
+            stream_url = f"{base_url}/api/stream/{filename}"
+
+            return jsonify({
+                'success': True,
+                'title': info.get('title', 'Medya Dosyası'),
+                'duration': info.get('duration_string', 'Medya'),
+                'thumbnail': info.get('thumbnail', ''),
+                'filename': filename,
+                'ext': ext,
+                'uploader': info.get('uploader', 'CAN STUDIO'),
+                'filesize': file_size_mb,
+                'streamUrl': stream_url
+            })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'İşlem hatası: {str(e)}'}), 500
+
+@app.route('/api/download/<filename>', methods=['GET'])
+def download_file(filename):
+    try:
+        filepath = os.path.join(DOWNLOAD_FOLDER, filename)
+        return send_file(filepath, as_attachment=True)
+    except Exception as e:
+        return jsonify({'error': 'Dosya bulunamadı.'}), 404
+
+@app.route('/api/stream/<filename>', methods=['GET'])
+def stream_file(filename):
+    try:
+        filepath = os.path.join(DOWNLOAD_FOLDER, filename)
+        return send_file(filepath)
+    except Exception as e:
+        return jsonify({'error': 'Dosya akışı sağlanamadı.'}), 404
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    print(f"🚀 CAN STUDIO Çerez Destekli Kararlı Motor Aktif: http://localhost:{port}")
+    app.run(host="0.0.0.0", port=port, debug=False)
