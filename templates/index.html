@@ -3,51 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAN STUDIO — Media Suite</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <title>CAN STUDIO - Media Suite</title>
     <style>
         :root {
-            --mac-bg: #d7d8dc;
-            --window-bg: rgba(255, 255, 255, 0.9);
-            --window-border: rgba(255, 255, 255, 0.98);
-            --input-bg: rgba(0, 0, 0, 0.045);
-            --input-bg-focus: #ffffff;
-            --apple-blue: #0071e3;
-            --apple-blue-hover: #0077ed;
-            --text-primary: #1d1d1f;
-            --text-secondary: #515156;
-            --border-color: rgba(0, 0, 0, 0.1);
+            --bg-color: #f3f4f6;
             --card-bg: #ffffff;
-            --shadow-window: 0 40px 80px rgba(0, 0, 0, 0.2), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --border-color: #e5e7eb;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --input-bg: #f9fafb;
         }
 
-        body.dark-mode {
-            --mac-bg: #1e1e20;
-            --window-bg: rgba(30, 30, 32, 0.85);
-            --window-border: rgba(255, 255, 255, 0.12);
-            --input-bg: rgba(255, 255, 255, 0.06);
-            --input-bg-focus: rgba(255, 255, 255, 0.1);
-            --text-primary: #f5f5f7;
-            --text-secondary: #a1a1a6;
-            --border-color: rgba(255, 255, 255, 0.12);
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --shadow-window: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 0 0.5px rgba(255, 255, 255, 0.1);
-        }
-
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
             transition: background 0.3s ease, color 0.3s ease;
         }
-        
+
         body {
-            background-color: var(--mac-bg);
-            background-image: 
-                radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.9) 0%, transparent 50%),
-                radial-gradient(circle at 80% 90%, rgba(170, 180, 200, 0.7) 0%, transparent 50%);
+            background-color: var(--bg-color);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -58,488 +37,458 @@
 
         .mac-window {
             width: 100%;
-            max-width: 860px;
-            background: var(--window-bg);
-            backdrop-filter: blur(50px);
-            -webkit-backdrop-filter: blur(50px);
-            border: 1px solid var(--window-border);
+            max-width: 680px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
-            box-shadow: var(--shadow-window);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
             overflow: hidden;
+            position: relative;
         }
 
-        .titlebar {
-            height: 42px;
-            background: rgba(255, 255, 255, 0.75);
-            border-bottom: 1px solid var(--border-color);
+        .window-header {
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--card-bg);
         }
 
         .window-title {
-            font-size: 13.5px;
-            font-weight: 800;
-            color: var(--text-primary);
-            letter-spacing: 0.5px;
-            margin: 0 auto;
-        }
-
-        .top-actions {
-            display: flex;
-            gap: 8px;
-            position: absolute;
-            right: 24px;
-        }
-
-        .icon-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 11.5px;
+            font-size: 13px;
             font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 8px;
             cursor: pointer;
-        }
-        .icon-btn:hover { background: var(--apple-blue); color: white; border-color: var(--apple-blue); }
-
-        .window-content { padding: 40px; }
-
-        .app-header { text-align: center; margin-bottom: 24px; }
-        .app-header h1 { 
-            font-size: 32px; 
-            font-weight: 800; 
-            letter-spacing: -0.8px; 
-            margin-bottom: 8px; 
-            color: var(--text-primary); 
-        }
-        .app-header p { 
-            font-size: 14.5px; 
-            color: var(--text-secondary); 
-            font-weight: 600; 
-        }
-
-        .platforms-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-        .platform-tag {
-            background: var(--input-bg); border: 1px solid var(--border-color);
-            padding: 6px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 700; color: var(--text-secondary);
-        }
-
-        .segmented-control {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
             display: flex;
-            background: var(--input-bg);
-            padding: 4px;
-            border-radius: 10px;
-            max-width: 440px;
-            margin: 0 auto 20px auto;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-color);
+        }
+
+        .content-body {
+            padding: 30px;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero-section h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .hero-section p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-secondary);
             border: 1px solid var(--border-color);
         }
-        .segment-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 6px 4px;
+
+        .quality-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .quality-btn {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
             color: var(--text-secondary);
-            border-radius: 7px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            height: 42px;
+            text-align: center;
+        }
+
+        .quality-btn.active {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(37, 99, 235, 0.04);
+        }
+
+        .input-group {
             display: flex;
-            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .url-input:focus {
+            border-color: var(--accent-color);
+            background: var(--card-bg);
+        }
+
+        .submit-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
             align-items: center;
             justify-content: center;
-            line-height: 1.2;
+            gap: 8px;
         }
-        .segment-btn.active {
-            background: var(--card-bg);
-            color: var(--text-primary);
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .history-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .history-title {
+            font-size: 12px;
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border: 1px solid var(--border-color);
+            text-transform: uppercase;
+            color: var(--text-secondary);
         }
 
-        .search-field-container {
-            background: var(--input-bg); border: 1px solid var(--border-color);
-            padding: 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03); transition: all 0.2s ease;
+        .clear-history {
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: #ef4444;
+            cursor: pointer;
+            font-weight: 600;
         }
-        .search-field-container:focus-within {
-            background: var(--input-bg-focus); border-color: var(--apple-blue);
-            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.18);
-        }
-        
-        .search-field-container textarea {
-            width: 100%; background: transparent; border: none; outline: none;
-            padding: 4px 8px; font-size: 14.5px; font-weight: 600; color: var(--text-primary);
-            resize: none; height: 42px; 
-            white-space: nowrap; overflow-x: auto; overflow-y: hidden;
-        }
-        .search-field-container textarea::placeholder { color: var(--text-secondary); font-weight: 500; white-space: normal; }
 
-        .search-bottom-row { display: flex; justify-content: flex-end; align-items: center; padding: 0 4px; }
-
-        .apple-button {
-            background: var(--apple-blue); color: white; border: none;
-            padding: 0 24px; border-radius: 8px; font-weight: 700; font-size: 13.5px;
-            cursor: pointer; height: 38px; transition: background 0.15s ease;
-            box-shadow: 0 2px 6px rgba(0, 113, 227, 0.25);
-        }
-        .apple-button:hover { background: var(--apple-blue-hover); }
-
-        #loader { display: none; text-align: center; padding: 25px 0; color: var(--text-secondary); font-size: 13.5px; font-weight: 600; }
-        .spinner {
-            width: 24px; height: 24px; border: 2.5px solid rgba(0, 0, 0, 0.1);
-            border-top-color: var(--apple-blue); border-radius: 50%;
-            animation: spin 0.6s linear infinite; margin: 0 auto 10px auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .results-header-row {
-            display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 8px;
-        }
-        .results-title { font-size: 13.5px; font-weight: 800; color: var(--text-secondary); letter-spacing: 0.4px; }
-        .clear-results-btn { font-size: 12px; font-weight: 700; color: #ff3b30; cursor: pointer; }
-
-        #results-container {
+        .history-list {
+            max-height: 180px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
 
-        .result-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color); 
-            border-radius: 14px; 
-            padding: 16px;
-            display: flex; 
-            gap: 16px; 
-            align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            animation: fadeIn 0.3s ease;
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .thumb-box { position: relative; width: 120px; height: 75px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f0f0f2; border: 0.5px solid rgba(0,0,0,0.08); cursor: pointer; }
-        .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .play-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.2s; color: white; font-weight: 800; font-size: 12px;
+        .history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow: hidden;
+            margin-right: 10px;
         }
-        .thumb-box:hover .play-overlay { opacity: 1; }
-        
-        .duration-tag {
-            position: absolute; bottom: 4px; right: 4px; background: rgba(0, 0, 0, 0.8);
-            color: white; padding: 2px 5px; border-radius: 4px; font-size: 10px; font-weight: 700;
-        }
-        .media-info { flex: 1; min-width: 0; }
-        .media-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .media-meta { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
-        
-        .meta-badge { background: var(--input-bg); padding: 2px 6px; border-radius: 4px; font-size: 11px; border: 1px solid var(--border-color); }
 
-        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .apple-dl-btn {
-            background: var(--apple-blue); color: white; padding: 6px 14px;
-            border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 12px;
-            display: inline-flex; align-items: center; gap: 4px; transition: opacity 0.15s;
+        .history-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .apple-dl-btn:hover { opacity: 0.9; }
-        .apple-dl-btn.secondary { background: var(--input-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
-        .apple-dl-btn.secondary:hover { background: var(--border-color); }
 
-        .history-box {
-            margin-top: 24px; background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 14px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        .history-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
         }
-        .history-header {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 12.5px; font-weight: 800; color: var(--text-secondary); margin-bottom: 10px; letter-spacing: 0.4px;
-        }
-        .history-header span:last-child { color: var(--apple-blue); cursor: pointer; font-weight: 700; }
-        .history-list { display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto; }
-        .history-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 12px; background: var(--input-bg); border-radius: 8px; font-size: 13px; color: var(--text-secondary);
-        }
-        .history-row span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 460px; color: var(--text-primary); font-weight: 700; }
 
+        .download-action-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .empty-history {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            padding: 15px;
+        }
+
+        /* Toast Alert */
         #toast-container {
-            position: fixed; top: 20px; right: 20px; z-index: 9999;
-            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        .mac-toast {
-            background: rgba(30, 30, 32, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            color: white; padding: 12px 18px; border-radius: 12px; font-size: 13px; font-weight: 700;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards; pointer-events: auto;
-        }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
 
-        #modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            display: none; align-items: center; justify-content: center; z-index: 10000; animation: fadeInModal 0.2s ease;
+        .toast {
+            background: #1f2937;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
         }
-        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
-        .modal-box {
-            width: 100%; max-width: 700px; background: var(--window-bg); border: 1px solid var(--window-border);
-            border-radius: 16px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.5); padding: 20px; display: flex; flex-direction: column; gap: 14px;
+
+        .toast.error { background: #dc2626; }
+        .toast.success { background: #16a34a; }
+
+        @keyframes slideIn {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 14px; color: var(--text-primary); }
-        .modal-close { background: var(--input-bg); border: none; color: var(--text-primary); width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-weight: 800; }
-        .modal-video-container { width: 100%; aspect-ratio: 16/9; background: black; border-radius: 10px; overflow: hidden; }
-        .modal-video-container video { width: 100%; height: 100%; object-fit: contain; outline: none; }
     </style>
 </head>
 <body>
 
-    <div id="toast-container"></div>
-
-    <div id="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <span id="modal-title">Medya Önizleme</span>
-                <button class="modal-close" onclick="closeModal()">✕</button>
-            </div>
-            <div class="modal-video-container">
-                <video id="modal-video" controls autoplay></video>
-            </div>
-        </div>
-    </div>
-
     <div class="mac-window">
-        <div class="titlebar">
-            <div class="window-title">CAN STUDIO</div>
-            <div class="top-actions">
-                <button class="icon-btn" onclick="toggleDarkMode()">🌓 Tema</button>
-            </div>
+        <div class="window-header">
+            <span class="window-title">CAN STUDIO</span>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span>🎨 Tema</span>
+            </button>
         </div>
 
-        <div class="window-content">
-            <div class="app-header">
+        <div class="content-body">
+            <div class="hero-section">
                 <h1>Medya İndirme Konsolu</h1>
                 <p>YouTube, Instagram, TikTok ve X platformlarından yüksek kalitede medya indirin.</p>
             </div>
 
-            <div class="platforms-row">
-                <div class="platform-tag">YouTube</div>
-                <div class="platform-tag">Instagram</div>
-                <div class="platform-tag">TikTok</div>
-                <div class="platform-tag">X (Twitter)</div>
-                <div class="platform-tag">Pinterest</div>
+            <div class="badges">
+                <span class="badge">YouTube</span>
+                <span class="badge">Instagram</span>
+                <span class="badge">TikTok</span>
+                <span class="badge">X (Twitter)</span>
+                <span class="badge">Pinterest</span>
             </div>
 
-            <div class="segmented-control">
-                <button class="segment-btn active" id="btn-best" onclick="setQuality('best', this)">
-                    <span>En İyi</span><span>Kalite</span>
+            <div class="quality-selector">
+                <button class="quality-btn active" onclick="setQuality('best', this)">En İyi Kalite</button>
+                <button class="quality-btn" onclick="setQuality('1080', this)">1080p HD</button>
+                <button class="quality-btn" onclick="setQuality('720', this)">720p</button>
+                <button class="quality-btn" onclick="setQuality('audio', this)">Sadece Ses (MP3)</button>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="urlInput" class="url-input" placeholder="Bağlantıyı yapıştırın (Alt alta en fazla 5 bağlantı)...">
+                <button id="submitBtn" class="submit-btn" onclick="extractMedia()">
+                    <span>Linki Getir</span>
                 </button>
-                <button class="segment-btn" id="btn-1080" onclick="setQuality('1080', this)">
-                    <span>1080p</span><span>HD</span>
-                </button>
-                <button class="segment-btn" id="btn-720" onclick="setQuality('720', this)">
-                    <span>720p</span><span>&nbsp;</span>
-                </button>
-                <button class="segment-btn" id="btn-audio" onclick="setQuality('audio', this)">
-                    <span>Sadece Ses</span><span>(MP3)</span>
-                </button>
             </div>
 
-            <div class="search-field-container">
-                <textarea id="urlInput" placeholder="Bağlantıyı yapıştırın (Alt alta en fazla 5 bağlantı)..."></textarea>
-                <div class="search-bottom-row">
-                    <button class="apple-button" onclick="extractMedia()">Linki Getir</button>
-                </div>
-            </div>
-
-            <div id="loader">
-                <div class="spinner"></div>
-                <span id="loader-text">Medya kuyrukta işleniyor...</span>
-            </div>
-
-            <div class="results-header-row" id="results-header" style="display: none;">
-                <span class="results-title">İndirilebilir Medyalar</span>
-                <span class="clear-results-btn" onclick="clearResults()">Tümünü Temizle</span>
-            </div>
-            <div id="results-container"></div>
-
-            <div class="history-box">
+            <div class="history-section">
                 <div class="history-header">
-                    <span>Oturum Geçmişi</span>
-                    <span onclick="clearHistory()">Temizle</span>
+                    <span class="history-title">Oturum Geçmişi</span>
+                    <button class="clear-history" onclick="clearHistory()">Temizle</button>
                 </div>
                 <div id="historyList" class="history-list">
-                    <div style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary); text-align: center; padding: 6px;">Geçmiş boş.</div>
+                    <div class="empty-history">Geçmiş boş.</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="toast-container"></div>
+
     <script>
         let selectedQuality = 'best';
-        let downloadHistory = [];
+        let history = JSON.parse(localStorage.getItem('media_history') || '[]');
 
-        function showToast(message) {
+        window.onload = function() {
+            renderHistory();
+        };
+
+        function setQuality(quality, el) {
+            selectedQuality = quality;
+            document.querySelectorAll('.quality-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'mac-toast';
+            toast.className = `toast ${type}`;
             toast.innerText = message;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            showToast(document.body.classList.contains('dark-mode') ? 'Karanlık mod aktif' : 'Aydınlık mod aktif');
-        }
-
-        function setQuality(quality, element) {
-            selectedQuality = quality;
-            document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        function openModal(streamUrl, title) {
-            const modal = document.getElementById('modal-overlay');
-            const video = document.getElementById('modal-video');
-            document.getElementById('modal-title').innerText = title;
-            video.src = streamUrl;
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('modal-overlay');
-            const video = document.getElementById('modal-video');
-            video.pause();
-            video.src = '';
-            modal.style.display = 'none';
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
         }
 
         async function extractMedia() {
-            const inputField = document.getElementById('urlInput');
-            const rawText = inputField.value.trim();
+            const input = document.getElementById('urlInput');
+            const btn = document.getElementById('submitBtn');
+            const rawText = input.value.trim();
+
             if (!rawText) {
-                showToast('Lütfen en az bir bağlantı adresi girin!');
+                showToast('Lütfen geçerli bir bağlantı adresi girin.', 'error');
                 return;
             }
 
             const urls = rawText.split('\n').map(u => u.trim()).filter(u => u.length > 0);
-            
-            if (urls.length === 0) {
-                showToast('Geçerli bir bağlantı bulunamadı!');
-                return;
-            }
 
-            if (urls.length > 5) {
-                showToast('Tek seferde en fazla 5 bağlantı girebilirsiniz!');
-                return;
-            }
+            btn.disabled = true;
+            btn.innerText = 'İşleniyor...';
 
-            inputField.value = '';
-
-            const loader = document.getElementById('loader');
-            const loaderText = document.getElementById('loader-text');
-            const resultsContainer = document.getElementById('results-container');
-            const resultsHeader = document.getElementById('results-header');
-
-            loader.style.display = 'block';
-
-            for (let i = 0; i < urls.length; i++) {
-                const currentUrl = urls[i];
-                loaderText.innerText = `İşleniyor (${i + 1}/${urls.length}): Medya hazırlanıyor...`;
-
+            for (let url of urls) {
                 try {
-                    const response = await fetch('http://localhost:5000/api/extract', {
+                    // DİNAMİK YOL: /api/extract (localhost iptal edildi, doğrudan canlı sunucuya gider)
+                    const response = await fetch('/api/extract', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ url: currentUrl, quality: selectedQuality })
+                        body: JSON.stringify({ url: url, quality: selectedQuality })
                     });
 
                     const data = await response.json();
 
-                    if (response.ok && data.success) {
-                        resultsHeader.style.display = 'flex';
-                        const downloadRoute = `http://localhost:5000/api/download/${data.filename}`;
-                        const uniqueId = 'history-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7);
-                        
-                        const card = document.createElement('div');
-                        card.className = 'result-card';
-                        card.innerHTML = `
-                            <div class="thumb-box" onclick="openModal('${data.streamUrl}', '${data.title.replace(/'/g, "\\'")}')">
-                                <img src="${data.thumbnail || 'https://via.placeholder.com/120x75'}" alt="Thumbnail">
-                                <div class="play-overlay">▶ Önizle</div>
-                                <div class="duration-tag">${data.duration || 'Medya'}</div>
-                            </div>
-                            <div class="media-info">
-                                <h3>${data.title}</h3>
-                                <div class="media-meta">
-                                    <span>Format: ${data.ext.toUpperCase()}</span>
-                                    <span class="meta-badge">${data.filesize}</span>
-                                    <span class="meta-badge">${data.uploader}</span>
-                                </div>
-                                <div class="btn-group">
-                                    <a href="${downloadRoute}" class="apple-dl-btn" target="_blank" onclick="markAsDownloaded('${uniqueId}')">Dosyayı İndir</a>
-                                    <button class="apple-dl-btn secondary" onclick="navigator.clipboard.writeText('${downloadRoute}'); showToast('Bağlantı panoya kopyalandı!');">Bağlantıyı Kopyala</button>
-                                </div>
-                            </div>
-                        `;
-                        resultsContainer.prepend(card);
-                        addToHistory(uniqueId, data.title + ` (${data.ext.toUpperCase()})`);
-                        showToast('Medya başarıyla hazırlandı!');
+                    if (data.success) {
+                        addToHistory({
+                            title: data.title,
+                            meta: `${data.ext.toUpperCase()} • ${data.filesize}`,
+                            streamUrl: data.streamUrl,
+                            filename: data.filename
+                        });
+                        showToast(`Başarıyla hazırlandı: ${data.title}`, 'success');
                     } else {
-                        showToast(`Hata: ${data.error || 'İşlenemedi'}`);
+                        showToast(data.error || 'İşlem başarısız.', 'error');
                     }
                 } catch (err) {
-                    console.error('Fetch hatası:', err);
-                    showToast('Sunucu ile bağlantı kurulamadı!');
+                    showToast('Sunucu ile bağlantı kurulamadı.', 'error');
                 }
             }
 
-            loader.style.display = 'none';
-            inputField.focus();
+            btn.disabled = false;
+            btn.innerText = 'Linki Getir';
+            input.value = '';
         }
 
-        function clearResults() {
-            document.getElementById('results-container').innerHTML = '';
-            document.getElementById('results-header').style.display = 'none';
-            showToast('Tüm sonuçlar temizlendi');
-        }
-
-        function addToHistory(id, title) {
-            downloadHistory.unshift({ id: id, title: title, status: 'Bekliyor' });
-            if (downloadHistory.length > 5) downloadHistory.pop();
+        function addToHistory(item) {
+            history.unshift(item);
+            if (history.length > 20) history.pop();
+            localStorage.setItem('media_history', JSON.stringify(history));
             renderHistory();
-        }
-
-        function markAsDownloaded(id) {
-            const item = downloadHistory.find(h => h.id === id);
-            if (item) {
-                item.status = 'İndirildi';
-                renderHistory();
-            }
         }
 
         function renderHistory() {
             const list = document.getElementById('historyList');
-            if (downloadHistory.length === 0) {
-                list.innerHTML = '<div style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary); text-align: center; padding: 6px;">Geçmiş boş.</div>';
+            if (history.length === 0) {
+                list.innerHTML = '<div class="empty-history">Geçmiş boş.</div>';
                 return;
             }
-            list.innerHTML = downloadHistory.map(item => `
-                <div class="history-row">
-                    <span>${item.title}</span>
-                    <span style="color: ${item.status === 'İndirildi' ? '#34c759' : '#86868b'}; font-weight: 700;">${item.status}</span>
-                </div>
-            `).join('');
+
+            list.innerHTML = '';
+            history.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div class="history-info">
+                        <span class="history-name" title="${item.title}">${item.title}</span>
+                        <span class="history-meta">${item.meta}</span>
+                    </div>
+                    <a href="${item.streamUrl}" class="download-action-btn" download>İndir</a>
+                `;
+                list.appendChild(div);
+            });
         }
 
         function clearHistory() {
-            downloadHistory = [];
+            history = [];
+            localStorage.removeItem('media_history');
             renderHistory();
-            showToast('Oturum geçmişi temizlendi');
+            showToast('Geçmiş temizlendi.');
+        }
+
+        function toggleTheme() {
+            const root = document.documentElement;
+            const currentBg = getComputedStyle(root).getPropertyValue('--bg-color').trim();
+            if (currentBg === '#f3f4f6') {
+                root.style.setProperty('--bg-color', '#0f172a');
+                root.style.setProperty('--card-bg', '#1e293b');
+                root.style.setProperty('--text-primary', '#f8fafc');
+                root.style.setProperty('--text-secondary', '#94a3b8');
+                root.style.setProperty('--border-color', '#334155');
+                root.style.setProperty('--input-bg', '#0f172a');
+            } else {
+                root.style.setProperty('--bg-color', '#f3f4f6');
+                root.style.setProperty('--card-bg', '#ffffff');
+                root.style.setProperty('--text-primary', '#1f2937');
+                root.style.setProperty('--text-secondary', '#4b5563');
+                root.style.setProperty('--border-color', '#e5e7eb');
+                root.style.setProperty('--input-bg', '#f9fafb');
+            }
         }
     </script>
 </body>
