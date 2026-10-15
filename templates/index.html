@@ -53,7 +53,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 30px 20px;
+            padding: 20px 12px;
         }
 
         .mac-window {
@@ -106,28 +106,33 @@
         }
         .icon-btn:hover { background: var(--apple-blue); color: white; border-color: var(--apple-blue); }
 
-        .window-content { padding: 40px; }
+        .window-content { padding: 24px sm:40px; }
+        @media (min-width: 640px) { .window-content { padding: 40px; } }
 
         .app-header { text-align: center; margin-bottom: 24px; }
         .app-header h1 { 
-            font-size: 32px; 
+            font-size: 26px; 
             font-weight: 800; 
             letter-spacing: -0.8px; 
             margin-bottom: 8px; 
             color: var(--text-primary); 
         }
+        @media (min-width: 640px) { .app-header h1 { font-size: 32px; } }
+        
         .app-header p { 
-            font-size: 14.5px; 
+            font-size: 13.5px; 
             color: var(--text-secondary); 
             font-weight: 600; 
         }
+        @media (min-width: 640px) { .app-header p { font-size: 14.5px; } }
 
         .platforms-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
         .platform-tag {
             background: var(--input-bg); border: 1px solid var(--border-color);
-            padding: 6px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 700; color: var(--text-secondary);
+            padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--text-secondary);
         }
 
+        /* 2 BUTONLU SEGMENTED CONTROL (Sadece En İyi Kalite ve Sadece Ses MP3) */
         .segmented-control {
             display: flex;
             background: var(--input-bg);
@@ -175,11 +180,13 @@
         
         .search-field-container textarea {
             width: 100%; background: transparent; border: none; outline: none;
-            padding: 4px 8px; font-size: 14.5px; font-weight: 600; color: var(--text-primary);
-            resize: none; height: 42px; 
-            white-space: nowrap; overflow-x: auto; overflow-y: hidden;
+            padding: 4px 8px; font-size: 14px; font-weight: 600; color: var(--text-primary);
+            resize: none; height: 60px;
         }
-        .search-field-container textarea::placeholder { color: var(--text-secondary); font-weight: 500; white-space: normal; }
+        @media (min-width: 640px) {
+            .search-field-container textarea { height: 42px; white-space: nowrap; overflow-x: auto; overflow-y: hidden; }
+        }
+        .search-field-container textarea::placeholder { color: var(--text-secondary); font-weight: 500; }
 
         .search-bottom-row { display: flex; justify-content: flex-end; align-items: center; padding: 0 4px; }
 
@@ -217,14 +224,20 @@
             border-radius: 14px; 
             padding: 16px;
             display: flex; 
-            gap: 16px; 
-            align-items: center; 
+            flex-direction: column;
+            gap: 12px; 
+            align-items: stretch;
             box-shadow: 0 4px 15px rgba(0,0,0,0.04);
             animation: fadeIn 0.3s ease;
         }
+        @media (min-width: 640px) {
+            .result-card { flex-direction: row; align-items: center; gap: 16px; }
+        }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .thumb-box { position: relative; width: 120px; height: 75px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f0f0f2; border: 0.5px solid rgba(0,0,0,0.08); cursor: pointer; }
+        .thumb-box { position: relative; width: 100%; aspect-ratio: 16/9; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f0f0f2; border: 0.5px solid rgba(0,0,0,0.08); cursor: pointer; }
+        @media (min-width: 640px) { .thumb-box { width: 120px; height: 75px; aspect-ratio: auto; } }
+        
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
         .play-overlay {
             position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
@@ -238,16 +251,18 @@
         }
         .media-info { flex: 1; min-width: 0; }
         .media-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .media-meta { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
+        .media-meta { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         
         .meta-badge { background: var(--input-bg); padding: 2px 6px; border-radius: 4px; font-size: 11px; border: 1px solid var(--border-color); }
 
         .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
         .apple-dl-btn {
-            background: var(--apple-blue); color: white; padding: 6px 14px;
+            background: var(--apple-blue); color: white; padding: 8px 14px;
             border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 12px;
             display: inline-flex; align-items: center; gap: 4px; transition: opacity 0.15s;
+            justify-content: center; flex: 1;
         }
+        @media (min-width: 640px) { .apple-dl-btn { flex: initial; } }
         .apple-dl-btn:hover { opacity: 0.9; }
         .apple-dl-btn.secondary { background: var(--input-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
         .apple-dl-btn.secondary:hover { background: var(--border-color); }
@@ -264,9 +279,10 @@
         .history-list { display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto; }
         .history-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 12px; background: var(--input-bg); border-radius: 8px; font-size: 13px; color: var(--text-secondary);
+            padding: 8px 12px; background: var(--input-bg); border-radius: 8px; font-size: 12.5px; color: var(--text-secondary); gap: 8px;
         }
-        .history-row span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 460px; color: var(--text-primary); font-weight: 700; }
+        .history-row span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text-primary); font-weight: 700; }
+        @media (min-width: 640px) { .history-row span:first-child { max-width: 460px; } }
 
         #toast-container {
             position: fixed; top: 20px; right: 20px; z-index: 9999;
@@ -283,12 +299,12 @@
 
         #modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            display: none; align-items: center; justify-content: center; z-index: 10000; animation: fadeInModal 0.2s ease;
+            display: none; align-items: center; justify-content: center; z-index: 10000; padding: 16px; animation: fadeInModal 0.2s ease;
         }
         @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
         .modal-box {
             width: 100%; max-width: 700px; background: var(--window-bg); border: 1px solid var(--window-border);
-            border-radius: 16px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.5); padding: 20px; display: flex; flex-direction: column; gap: 14px;
+            border-radius: 16px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.5); padding: 16px; display: flex; flex-direction: column; gap: 14px;
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 14px; color: var(--text-primary); }
         .modal-close { background: var(--input-bg); border: none; color: var(--text-primary); width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-weight: 800; }
@@ -334,15 +350,10 @@
                 <div class="platform-tag">Pinterest</div>
             </div>
 
+            <!-- İKİ BUTONLU KALİTE SEÇİCİ (En İyi Kalite ve Sadece Ses MP3) -->
             <div class="segmented-control">
                 <button class="segment-btn active" id="btn-best" onclick="setQuality('best', this)">
                     <span>En İyi</span><span>Kalite</span>
-                </button>
-                <button class="segment-btn" id="btn-1080" onclick="setQuality('1080', this)">
-                    <span>1080p</span><span>HD</span>
-                </button>
-                <button class="segment-btn" id="btn-720" onclick="setQuality('720', this)">
-                    <span>720p</span><span>&nbsp;</span>
                 </button>
                 <button class="segment-btn" id="btn-audio" onclick="setQuality('audio', this)">
                     <span>Sadece Ses</span><span>(MP3)</span>
@@ -453,7 +464,6 @@
                 loaderText.innerText = `İşleniyor (${i + 1}/${urls.length}): Medya hazırlanıyor...`;
 
                 try {
-                    // DİNAMİK YOL: Canlı sunucuya (Render) sorunsuz bağlanması için kök dizin (/api/extract) kullanıldı
                     const response = await fetch('/api/extract', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -517,6 +527,7 @@
         }
 
         function markAsDownloaded(id) {
+            videoDownloaded = true;
             const item = downloadHistory.find(h => h.id === id);
             if (item) {
                 item.status = 'İndirildi';
