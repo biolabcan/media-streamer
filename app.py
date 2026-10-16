@@ -2,9 +2,19 @@ from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import yt_dlp
 import os
+import requests  # <-- Master panele istek atabilmek için eklendi
 
 app = Flask(__name__, template_folder='templates')
 CORS(app)
+
+MASTER_ANALYTICS_URL = "https://canmaster.onrender.com/api/log-visit"
+PROJECT_NAME = "Media Suite"
+
+def log_visit():
+    try:
+        requests.post(MASTER_ANALYTICS_URL, json={"site_name": PROJECT_NAME}, timeout=1)
+    except Exception:
+        pass
 
 DOWNLOAD_FOLDER = os.path.abspath('downloads')
 if not os.path.exists(DOWNLOAD_FOLDER):
@@ -12,6 +22,7 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 
 @app.route('/')
 def home():
+    log_visit()  # <-- Ana sayfaya her giren kişiyi master panele loglar!
     return render_template('index.html')
 
 @app.route('/api/extract', methods=['POST'])
@@ -63,7 +74,6 @@ def extract_media():
         else:
             ydl_opts.update({'format': 'best/best'})
         
-        # Tek seferde hem bilgileri alıp hem indirerek süreci maksimum hıza çıkarıyoruz
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             if not info:
