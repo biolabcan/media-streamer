@@ -133,10 +133,33 @@
         }
         @media (min-width: 640px) { .app-header p { font-size: 14.5px; padding: 0; } }
 
-        .platforms-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+        /* Mobil ve PC uyumlu platform etiketleri satırı */
+        .platforms-row { 
+            display: flex; 
+            justify-content: center; 
+            gap: 4px; 
+            margin-bottom: 22px; 
+            flex-wrap: wrap; 
+        }
+        @media (min-width: 640px) {
+            .platforms-row { gap: 6px; }
+        }
+
         .platform-tag {
-            background: var(--input-bg); border: 1px solid var(--border-color);
-            padding: 5px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 700; color: var(--text-secondary);
+            background: var(--input-bg); 
+            border: 1px solid var(--border-color);
+            padding: 4px 7px; 
+            border-radius: 8px; 
+            font-size: 10px; 
+            font-weight: 700; 
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        @media (min-width: 640px) {
+            .platform-tag {
+                padding: 5px 12px;
+                font-size: 11.5px;
+            }
         }
 
         .segmented-control {
