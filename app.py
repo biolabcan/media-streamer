@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import yt_dlp
 import os
-import requests  # <-- Master panele istek atabilmek için eklendi
+import requests  # Master panele detaylı veri uçurmak için
 
 app = Flask(__name__, template_folder='templates')
 CORS(app)
@@ -12,7 +12,21 @@ PROJECT_NAME = "Media Suite"
 
 def log_visit():
     try:
-        requests.post(MASTER_ANALYTICS_URL, json={"site_name": PROJECT_NAME}, timeout=1)
+        # Ziyaretçinin gerçek tarayıcı, IP ve yönlenme (referrer) bilgilerini yakalıyoruz
+        visitor_ua = request.headers.get('User-Agent', 'Bilinmeyen Cihaz')
+        visitor_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        referrer = request.referrer or 'Doğrudan Giriş'
+        
+        requests.post(
+            MASTER_ANALYTICS_URL, 
+            json={
+                "site_name": PROJECT_NAME,
+                "user_agent": visitor_ua,
+                "ip_address": visitor_ip,
+                "referrer": referrer
+            }, 
+            timeout=1
+        )
     except Exception:
         pass
 
@@ -22,7 +36,7 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 
 @app.route('/')
 def home():
-    log_visit()  # <-- Ana sayfaya her giren kişiyi master panele loglar!
+    log_visit()  # Ana sayfaya giren her ziyaretçinin detaylı künyesini master panele yollar
     return render_template('index.html')
 
 @app.route('/api/extract', methods=['POST'])
